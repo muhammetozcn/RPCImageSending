@@ -1,6 +1,9 @@
 import cv2
 import rpyc
+import numpy as np
 from PIL import Image
+from xml.dom import minidom
+
 
 
 """ cap=cv2.VideoCapture(0)
@@ -20,28 +23,37 @@ eyefunction()
 Image=cv2.VideoCapture(0).read()
 
 """
+def ImageMultiScale(face_cascade,gray):
+    faces=face_cascade.detectMultiScale(gray,3,5)
+    return faces
 
 
-def ImageProcess(Image,xmlfile):
-    
-    while True:
-        output=Image.read()
-        eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-        for (ex, ey, ew, eh) in eyes:
-            cv2.rectangle(roi_color, (ex,ey), (ex+ew, ey+eh), (0, 255, 0), 2)
-    return Image
+
+def ImageProcess(eye_cascade,img):
+    open_cv_image=np.array(img) 
+    eyes=eye_cascade.detectMultiScale(img,3,5)
+    for (ex, ey, ew, eh) in eyes:
+        print(str(ex)+":"+str(ey)+":"+str(ew)+":"+str(eh))
+        cv2.rectangle(open_cv_image, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 2)
+    return img
 
 
 
 
 conn=rpyc.classic.connect("localhost")
-conn.execute("import cv2")
+conn.execute('import cv2')
+conn.execute('import numpy as np')
 
 
-img = Image.open('.vscode/distrubeImage/seinfeld.jpg')
-img.show()
-In=conn.teleport(ImageProcess)
-gelenImage=In(img)
-cv2.imshow(gelenImage)
-cv2.waitKey(1)
+
+
+
+In=conn.teleport(ImageProcess)   
+
+face_cascade = cv2.CascadeClassifier('/home/ozcan/Desktop/RPCRMI/distrubeImage/haarcascade_frontalface_default.xml')
+img = cv2.imread('/home/ozcan/Desktop/RPCRMI/distrubeImage/seinfeld.jpg')
+#gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+Img=In( cv2.CascadeClassifier('/home/ozcan/Desktop/RPCRMI/distrubeImage/haarcascade_eye.xml'),img)
+cv2.imshow('eye finder',Img)
+cv2.waitKey(0)
 cv2.destroyAllWindows()
