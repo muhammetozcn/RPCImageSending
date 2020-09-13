@@ -7,4 +7,4 @@ Python ile Remote Procedure Call işlemleri
 
 2-)distrubeImage klasöründe Python ile Remote Procedure Call işlemi yaparak ilgili resimin datası servera gönderilir ve işlenir.İşlenen veri tekrar kullanıcıya gönderilir ve işlenmiş veri kullanıcının ekranında gösterilir.
 
-3-)Python thread işlemleri
+3-)Thread klasöründe Python thread işlemleri gösterilmiştir.
